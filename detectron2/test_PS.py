@@ -26,11 +26,11 @@ class CocoTrainer(DefaultTrainer):
 
     return COCOEvaluator(dataset_name, cfg, False, output_folder)
 register_coco_instances("vehicle_train_PS", {}, 
-                        "../datasets/train_PS50.json", 
-                        "../datasets/train_PS")
+                        "../../datasets/train_PS50.json", 
+                        "../../datasets/train_PS")
 register_coco_instances("vehicle_test_PS", {}, 
-                        "../datasets/test_PS10.json", 
-                        "../datasets/test_PS")
+                        "../../datasets/test_PS10.json", 
+                        "../../datasets/test_PS")
 
 vehicle_train_metadata = MetadataCatalog.get("vehicle_train_PS")
 dataset_dicts = DatasetCatalog.get("vehicle_train_PS")
@@ -43,12 +43,12 @@ cfg.OUTPUT_DIR = "./output_PS"
 cfg.merge_from_file("../configs/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
 cfg.DATASETS.TRAIN = ("vehicle_train_PS",)
 cfg.DATASETS.TEST = ("vehicle_test_PS",)
-cfg.MODEL.WEIGHTS = "../weights/model_final_PS.pth"
+cfg.MODEL.WEIGHTS = "../../weights/model_final_PS.pth"
 
-cfg.DATALOADER.NUM_WORKERS = 40
-cfg.SOLVER.IMS_PER_BATCH = 10
+cfg.DATALOADER.NUM_WORKERS = 2
+cfg.SOLVER.IMS_PER_BATCH = 2
 
-cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 1024
+cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 3
 os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
 os.makedirs("./output_PS", exist_ok=True)
