@@ -5,7 +5,7 @@
 1. 소스코드 다운로드
 
 ```bash
-git clone https://github.com/swhan0329/KETI_NIA2/
+git clone https://github.com/swhan0329/detectron2_keti/
 ```
 
 2. 데이터셋 다운로드
@@ -18,23 +18,33 @@ git clone https://github.com/swhan0329/KETI_NIA2/
 
 * 객체 검출/분할 코드 트리
 
-detectron2  
-├── configs  
-├── dataset  
-│   ├── train_BB.json  
-│   ├── test_BB.json  
-│   ├── test_BB  
-│   ├── train_PS.json  
-│   ├── test_PS.json  
-│   ├── train_PS  
-│   ├── test_PS  
-├── demo  
-├── detectron2  
-├── dev  
-├── docs  
-├── projects  
-├── tests  
-└── tools  
+```
+.
+├── datasets
+│   ├── test_PS
+│   ├── test_PS10.json
+│   ├── train_PS
+│   └── train_PS50.json
+├── detectron2_keti
+│   ├── build
+│   ├── configs
+│   ├── demo
+│   ├── detectron2
+│   ├── detectron2.egg-info
+│   ├── dev
+│   ├── docker
+│   ├── docs
+│   ├── LICENSE
+│   ├── MODEL_ZOO.md
+│   ├── projects
+│   ├── README.md
+│   ├── setup.cfg
+│   ├── setup.py
+│   ├── tests
+│   └── tools
+└── weights
+    └── model_final_PS.pth 
+```
 
 ## 도커 이미지 사용 매뉴얼
 
