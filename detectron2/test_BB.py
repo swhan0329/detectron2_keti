@@ -13,10 +13,11 @@ import detectron2
 from detectron2.utils.logger import setup_logger
 from detectron2.evaluation import COCOEvaluator, inference_on_dataset
 from PIL import ImageFile 
+
+from detectron2.utils.visualizer import ColorMode
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-class CocoTrainer(DefaultTrainer):
-    
+class CocoPredictor(DefaultPredictor):
   @classmethod
   def build_evaluator(cls, cfg, dataset_name, output_folder=None):
 
@@ -25,37 +26,41 @@ class CocoTrainer(DefaultTrainer):
         output_folder = "coco_eval"
 
     return COCOEvaluator(dataset_name, cfg, False, output_folder)
-register_coco_instances("vehicle_train_BB", {}, 
-                        "../../datasets/train_BB50.json", 
-                        "../../datasets/train_BB")
+
 register_coco_instances("vehicle_test_BB", {}, 
                         "../../datasets/test_BB10.json", 
                         "../../datasets/test_BB")
-
-vehicle_train_metadata = MetadataCatalog.get("vehicle_train_BB")
-dataset_dicts = DatasetCatalog.get("vehicle_train_BB")
 
 vehicle_test_metadata = MetadataCatalog.get("vehicle_test_BB")
 dataset_dicts = DatasetCatalog.get("vehicle_test_BB")
 
 cfg = get_cfg()
-cfg.OUTPUT_DIR = "./output_PS"
-cfg.merge_from_file("../configs/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
-cfg.DATASETS.TRAIN = ("vehicle_train_BB",)
-cfg.DATASETS.TEST = ("vehicle_test_BB",)
-cfg.MODEL.WEIGHTS = "../../weights/model_final_BB.pth"
-
-cfg.DATALOADER.NUM_WORKERS = 2
-cfg.SOLVER.IMS_PER_BATCH = 2
-
-cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512
+cfg.merge_from_file("../configs/COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 3
+cfg.OUTPUT_DIR = "./output_BB
+cfg.MODEL.BACKBONE.FREEZE_AT = 0
+cfg.MODEL.WEIGHTS = "../../weights/model_final_BB.pth"
+cfg.DATASETS.TEST = ("vehicle_test_BB",)
+
 os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
 os.makedirs("./output_BB", exist_ok=True)
 
-trainer = CocoTrainer(cfg)
-trainer.resume_or_load(resume=True)
+predictor = CocoPredictor(cfg)
+
+i=0
+for d in random.sample(dataset_dicts, 5):    
+    im = cv2.imread(d["file_name"])
+    file_name = d["file_name"][:-4]
+    outputs = predictor(im)
+    v = Visualizer(im[:, :, ::-1],
+                   metadata=vehicle_test_metadata, 
+                   scale=0.5, 
+                   instance_mode=ColorMode.IMAGE_BW
+    )
+    out = v.draw_instance_predictions(outputs["instances"].to("cpu"))
+    cv2.imwrite(cfg.OUTPUT_DIR +"/"+str(i)+"_result.png",out.get_image()[:, :, ::-1])
+    i+=1
 
 evaluator = COCOEvaluator("vehicle_test_BB", cfg, False, output_dir="./output_BB/")
 test_loader = build_detection_test_loader(cfg, "vehicle_test_BB")
-print(inference_on_dataset(trainer.model, test_loader, evaluator))
+inference_on_dataset(predictor.model, test_loader, evaluator)
