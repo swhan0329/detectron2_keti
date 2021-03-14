@@ -12,13 +12,17 @@ git clone https://github.com/swhan0329/detectron2_keti/
 
 * 모델 웨이트
 
+- 객체 분할: https://drive.google.com/file/d/1l0XBnJ88RsjwTzaEr5sqtnTSrvT0c3VM/view?usp=sharing
+
+- 객체 검출: 
+
 * 데이터셋
 
 AI HUB에 올라와있는 (detection, segmentation) test 데이터셋 다운
 
 * 도커이미지
 
-
+- 객체 분할/검출: https://drive.google.com/file/d/1vG-DCzB-s2ckUdS9YiALlmBxhZAHSsWu/view?usp=sharing
 
 3. 경로 설정
 
