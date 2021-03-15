@@ -333,7 +333,7 @@ class COCOEvaluator(DatasetEvaluator):
         for idx, name in enumerate(class_names):
             # area range index 0: all area ranges
             # max dets index -1: typically 100 per image
-            precision = precisions[:, :, idx, 0, -1]
+            precision = precisions[0, :, idx, 0, -1]
             precision = precision[precision > -1]
             ap = np.mean(precision) if precision.size else float("nan")
             results_per_category.append(("{}".format(name), float(ap * 100)))
@@ -346,7 +346,7 @@ class COCOEvaluator(DatasetEvaluator):
             results_2d,
             tablefmt="pipe",
             floatfmt=".3f",
-            headers=["category", "AP"] * (N_COLS // 2),
+            headers=["category", "AP50"] * (N_COLS // 2),
             numalign="left",
         )
         self._logger.info("Per-category {} AP: \n".format(iou_type) + table)
