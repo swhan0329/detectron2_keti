@@ -67,3 +67,5 @@ for d in random.sample(dataset_dicts, 5):
 evaluator = COCOEvaluator("vehicle_test_BB", cfg, False, output_dir="./output_BB/")
 test_loader = build_detection_test_loader(cfg, "vehicle_test_BB")
 print(inference_on_dataset(predictor.model, test_loader, evaluator))
+now = datetime.datetime.now()
+print(now)
