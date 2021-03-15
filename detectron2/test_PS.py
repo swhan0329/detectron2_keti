@@ -13,9 +13,12 @@ import detectron2
 from detectron2.utils.logger import setup_logger
 from detectron2.evaluation import COCOEvaluator, inference_on_dataset
 from PIL import ImageFile 
-
 from detectron2.utils.visualizer import ColorMode
+import datetime
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+now = datetime.datetime.now()
+print(now)
 
 class CocoPredictor(DefaultPredictor):
   @classmethod
@@ -63,4 +66,6 @@ for d in random.sample(dataset_dicts, 5):
 
 evaluator = COCOEvaluator("vehicle_test_PS", ("bbox", "segm"), False, output_dir="./output_PS/")
 test_loader = build_detection_test_loader(cfg, "vehicle_test_PS")
-inference_on_dataset(predictor.model, test_loader, evaluator)
+print(inference_on_dataset(predictor.model, test_loader, evaluator))
+now = datetime.datetime.now()
+print(now)
