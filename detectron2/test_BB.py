@@ -12,10 +12,12 @@ from detectron2.data.datasets import register_coco_instances
 import detectron2
 from detectron2.utils.logger import setup_logger
 from detectron2.evaluation import COCOEvaluator, inference_on_dataset
-from PIL import ImageFile 
-
-from detectron2.utils.visualizer import ColorMode
+from PIL import ImageFile
+import datetime
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+now = datetime.datetime.now()
+print(now)
 
 class CocoPredictor(DefaultPredictor):
   @classmethod
@@ -40,6 +42,7 @@ cfg.MODEL.ROI_HEADS.NUM_CLASSES = 3
 cfg.OUTPUT_DIR = "./output_BB
 cfg.MODEL.BACKBONE.FREEZE_AT = 0
 cfg.MODEL.WEIGHTS = "../../weights/model_final_BB.pth"
+cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
 cfg.DATASETS.TEST = ("vehicle_test_BB",)
 
 os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
@@ -63,4 +66,4 @@ for d in random.sample(dataset_dicts, 5):
 
 evaluator = COCOEvaluator("vehicle_test_BB", cfg, False, output_dir="./output_BB/")
 test_loader = build_detection_test_loader(cfg, "vehicle_test_BB")
-inference_on_dataset(predictor.model, test_loader, evaluator)
+print(inference_on_dataset(predictor.model, test_loader, evaluator))
